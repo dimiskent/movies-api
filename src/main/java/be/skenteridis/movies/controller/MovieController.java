@@ -5,6 +5,7 @@ import be.skenteridis.movies.dto.MovieResponseDTO;
 import be.skenteridis.movies.service.MovieService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +27,14 @@ public class MovieController {
     @GetMapping
     public ResponseEntity<?> getMovies(
             @Positive(message = "Rating must be positive, 10 or less!") @Max(value = 10, message = "Must be 10 or less!") @RequestParam(required = false) Byte rating,
-            @RequestParam(required = false) Boolean favorite
+            @RequestParam(required = false) Boolean favorite,
+            @NotBlank(message = "Rating cannot be blank!") @RequestParam(required = false) String sort
             ) {
         List<MovieResponseDTO> movies = new ArrayList<>();
 
         if(favorite != null) movies.addAll(service.getMoviesByFavorite(favorite));
         else if(rating != null) movies.addAll(service.getMoviesByRating(rating));
+        else if(sort != null && sort.equals("rating")) movies.addAll(service.getMoviesOrderedByRating());
         else movies.addAll(service.getMovies());
 
         return movies.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(movies);

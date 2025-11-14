@@ -34,4 +34,8 @@ public class MovieService {
     public List<MovieResponseDTO> getMoviesByRating(byte rating) {
         return repository.findByRatingGreaterThanEqual(rating).stream().map(MovieMapper::mapToMovieResponseDTOFromMovie).toList();
     }
+
+    public List<MovieResponseDTO> getMoviesOrderedByRating() {
+        return repository.findAllByOrderByRatingDesc().stream().map(MovieMapper::mapToMovieResponseDTOFromMovie).toList();
+    }
 }

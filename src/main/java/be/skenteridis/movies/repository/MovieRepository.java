@@ -10,4 +10,5 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findByRatingGreaterThanEqual(double rating);
     List<Movie> findByIsFavorite(boolean favorite);
+    List<Movie> findAllByOrderByRatingDesc();
 }
